@@ -12,6 +12,10 @@
   --ink-rgb: 243, 242, 242;
   --bg-rgb: 10, 22, 34;
   --bg3-rgb: 7, 17, 27;
+  --a-rule: 0.2;
+  --a-soft: 0.14;
+  --a-strong: 0.24;
+  --a-faint: 0.1;
 }
 :root[data-theme="light"] {
   --bg: #ffffff;
@@ -25,6 +29,11 @@
   --ink-rgb: 10, 22, 34;
   --bg-rgb: 255, 255, 255;
   --bg3-rgb: 233, 238, 243;
+  /* lighter dividers on white so the grid does not feel heavy */
+  --a-rule: 0.11;
+  --a-soft: 0.08;
+  --a-strong: 0.14;
+  --a-faint: 0.06;
 }
 
 @theme inline {
@@ -36,10 +45,10 @@
   --color-mute: var(--mute);
   --color-acc: var(--acc);
   --color-hl: var(--hl);
-  --color-rule: rgb(var(--ink-rgb) / 0.2);
-  --color-rule-soft: rgb(var(--ink-rgb) / 0.14);
-  --color-rule-strong: rgb(var(--ink-rgb) / 0.24);
-  --color-rule-faint: rgb(var(--ink-rgb) / 0.1);
+  --color-rule: rgb(var(--ink-rgb) / var(--a-rule));
+  --color-rule-soft: rgb(var(--ink-rgb) / var(--a-soft));
+  --color-rule-strong: rgb(var(--ink-rgb) / var(--a-strong));
+  --color-rule-faint: rgb(var(--ink-rgb) / var(--a-faint));
   --color-brand: #00508e;
   --color-brand-hover: #0062ad;
   --font-sans: var(--font-archivo), Arial, Helvetica, sans-serif;
