@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&display=swap">
+<link rel="stylesheet" href="_ds/modernist-7862b0c1-9e65-42fb-a319-824e06d5d1d0/styles.css">
+<script src="_ds/modernist-7862b0c1-9e65-42fb-a319-824e06d5d1d0/_ds_bundle.js"></script>
+<script src="./image-slot.js"></script>
+<script src="./vendor/three.global.js"></script>
+<script src="./pepl-bg.js"></script>
+<style>
+  :root { --bg:#0A1622; --bg2:#122232; --bg3:#07111B; --ink:#F3F2F2; --mute:#8C9AA8; --soft:#C3CDD7; --acc:#5AA6E6; --ink-rgb:243,242,242; --bg-rgb:10,22,34; --bg3-rgb:7,17,27; }
+  :root[data-theme="light"] { --bg:#FFFFFF; --bg2:#F1F4F7; --bg3:#E9EEF3; --ink:#0A1622; --mute:#56677A; --soft:#2F4356; --acc:#00508E; --ink-rgb:10,22,34; --bg-rgb:255,255,255; --bg3-rgb:233,238,243; }
+  html, body, header, footer, section, div, button, input, textarea { transition: background-color 0.5s ease, color 0.5s ease, border-color 0.5s ease; }
+  html { background: var(--bg); }
+  img[data-logo] { filter: brightness(0) invert(1); transition: filter 0.5s ease; }
+  :root[data-theme="light"] img[data-logo] { filter: none; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font-family: Archivo, Arial, Helvetica, sans-serif; overflow-x: hidden; }
+  * { box-sizing: border-box; }
+  a { color: var(--ink); text-decoration: none; }
+  a:hover { color: var(--acc); }
+  button, input, textarea { font-family: Archivo, Arial, Helvetica, sans-serif; }
+  h1, h2, h3, h4, p { text-wrap: pretty; }
+  :focus-visible { outline: 2px solid var(--acc); outline-offset: 2px; }
+  ::selection { background: #00508E; color: #fff; }
+  image-slot { --slot-bg: var(--bg2); --slot-ink: var(--mute); }
+  @keyframes pepl-marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+  @keyframes pepl-sweep { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @media (prefers-reduced-motion: no-preference) {
+    [data-reveal] { opacity: 0; }
+    [data-motion-off] [data-reveal] { opacity: 1; }
+  }
+</style>
+</helmet>
+<template id="__bundler_thumbnail"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" data-bg-color="#0A1622"><rect width="100" height="100" fill="#0A1622"></rect><circle cx="50" cy="50" r="20" fill="#00508E"></circle><rect x="44" y="36" width="5" height="28" fill="#FFFFFF" transform="skewX(-15)"></rect></svg></template>
+
+<div style="position:relative">
+
+<canvas ref="{{ bgRef }}" aria-hidden="true" style="position:fixed;inset:0;width:100vw;height:100vh;z-index:0;display:block"></canvas>
+<div aria-hidden="true" style="position:fixed;inset:0;z-index:1;pointer-events:none;background:radial-gradient(115% 85% at 50% 40%, rgba(var(--bg-rgb),0) 30%, rgba(var(--bg-rgb),0.88) 100%)"></div>
+
+<div style="position:relative;z-index:2">
+
+<header style="position:sticky;top:0;z-index:100;display:flex;align-items:center;justify-content:space-between;gap:24px;height:84px;padding:0 clamp(16px,3vw,32px);background:rgba(var(--bg-rgb),0.92);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+  <button onClick="{{ goHome }}" style="display:flex;align-items:center;gap:14px;border:0;background:transparent;padding:0;cursor:pointer;color:inherit;text-align:left;min-width:0">
+    <span style="display:flex;align-items:center;justify-content:center;flex:none;padding:5px 0;background:transparent">
+      <img data-logo="1" src="./assets/pepl-logo.png" alt="Parasmani Engineering Pvt. Ltd." style="display:block;height:30px;width:auto">
+    </span>
+  </button>
+
+  <sc-if value="{{ isDesktop }}" hint-placeholder-val="{{ true }}">
+    <nav style="display:flex;align-items:center;gap:clamp(10px,1.4vw,20px);flex:1;justify-content:flex-end;min-width:0">
+      <sc-for list="{{ nav }}" as="n" hint-placeholder-count="10">
+        <button onClick="{{ n.go }}" aria-current="{{ n.current }}" style="position:relative;padding:8px 0;border:0;background:transparent;color:inherit;font-size:11px;font-weight:600;letter-spacing:0.04em;cursor:pointer;white-space:nowrap" style-hover="{ color: 'var(--acc)' }">
+          {{ n.label }}
+          <sc-if value="{{ n.active }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;left:0;right:0;bottom:0;height:2px;background:#00508E;transform-origin:left;animation:pepl-sweep 0.45s cubic-bezier(0.16,1,0.3,1) both"></span></sc-if>
+        </button>
+      </sc-for>
+      <button onClick="{{ toggleMono }}" aria-pressed="{{ monoPressed }}" aria-label="Toggle light and dark theme" style="display:flex;align-items:center;gap:8px;padding:10px 14px;border:2px solid rgba(var(--ink-rgb),0.4);background:transparent;color:inherit;font-size:11px;font-weight:700;letter-spacing:0.06em;cursor:pointer;white-space:nowrap;margin-left:8px" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path></svg>
+        {{ monoLabel }}
+      </button>
+      <button onClick="{{ goContact }}" style="padding:12px 20px;border:2px solid #00508E;background:#00508E;color:#fff;font-size:11px;font-weight:700;letter-spacing:0.06em;cursor:pointer;white-space:nowrap" style-hover="{ background: '#0062AD', borderColor: '#0062AD' }">REQUEST A QUOTE</button>
+    </nav>
+  </sc-if>
+
+  <sc-if value="{{ isMobile }}" hint-placeholder-val="{{ false }}">
+    <div style="display:flex;align-items:center;gap:10px">
+      <button onClick="{{ toggleMono }}" aria-pressed="{{ monoPressed }}" aria-label="Toggle light and dark theme" style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border:2px solid rgba(var(--ink-rgb),0.4);background:transparent;color:inherit;cursor:pointer" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><path d="M12 2a10 10 0 0 1 0 20z" fill="currentColor"></path></svg>
+      </button>
+      <button onClick="{{ goContact }}" style="padding:12px 14px;border:2px solid #00508E;background:#00508E;color:#fff;font-size:10px;font-weight:700;letter-spacing:0.06em;cursor:pointer;white-space:nowrap">QUOTE</button>
+      <button onClick="{{ openMenu }}" aria-label="Open menu" style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border:2px solid var(--ink);background:transparent;color:inherit;cursor:pointer" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><line x1="3" y1="6" x2="21" y2="6"></line><line x1="3" y1="12" x2="21" y2="12"></line><line x1="3" y1="18" x2="21" y2="18"></line></svg>
+      </button>
+    </div>
+  </sc-if>
+</header>
+
+<div style="position:sticky;top:84px;z-index:99;height:2px;background:rgba(var(--ink-rgb),0.14)">
+  <div ref="{{ barRef }}" style="height:2px;width:0%;background:#00508E"></div>
+</div>
+
+<sc-if value="{{ menuOpen }}" hint-placeholder-val="{{ false }}">
+<div role="dialog" aria-label="Menu" style="position:fixed;inset:0;z-index:200;background:var(--bg);display:flex;flex-direction:column;overflow-y:auto">
+  <div style="display:flex;align-items:center;justify-content:space-between;height:84px;padding:0 clamp(16px,3vw,32px);border-bottom:2px solid rgba(var(--ink-rgb),0.2);flex:none">
+    <span style="font-weight:800;font-size:15px;letter-spacing:-0.01em">PARASMANI ENGINEERING</span>
+    <button onClick="{{ closeMenu }}" aria-label="Close menu" style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border:2px solid var(--ink);background:transparent;color:inherit;cursor:pointer" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+    </button>
+  </div>
+  <nav style="display:flex;flex-direction:column">
+    <sc-for list="{{ nav }}" as="n" hint-placeholder-count="10">
+      <button onClick="{{ n.goClose }}" style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding:20px clamp(16px,3vw,32px);border:0;border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:transparent;color:inherit;font-size:22px;font-weight:700;letter-spacing:-0.02em;text-align:left;cursor:pointer;min-height:64px" style-hover="{ background: 'var(--acc)', color: '#fff' }">
+        <span>{{ n.label }}</span>
+        <sc-if value="{{ n.active }}" hint-placeholder-val="{{ false }}"><span style="width:14px;height:14px;background:#00508E;flex:none"></span></sc-if>
+      </button>
+    </sc-for>
+  </nav>
+  <div style="padding:clamp(24px,5vw,40px) clamp(16px,3vw,32px);display:flex;flex-direction:column;gap:16px">
+    <button onClick="{{ goContactClose }}" style="padding:20px 24px;border:2px solid #00508E;background:#00508E;color:#fff;font-size:14px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:56px">REQUEST A QUOTE</button>
+    <div style="font-size:13px;line-height:1.8;color:var(--mute)">+91 98797 95382<br>info@parasmaniengineering.com</div>
+  </div>
+</div>
+</sc-if>
+
+<sc-if value="{{ videoOpen }}" hint-placeholder-val="{{ false }}">
+<div role="dialog" aria-label="Plant film" style="position:fixed;inset:0;z-index:210;background:rgba(var(--bg3-rgb),0.95);display:flex;align-items:center;justify-content:center;padding:clamp(16px,4vw,48px)">
+  <div style="width:100%;max-width:1100px">
+    <div style="display:flex;align-items:center;justify-content:space-between;gap:16px;padding-bottom:16px">
+      <span style="color:var(--ink);font-size:11px;font-weight:600;letter-spacing:0.14em">PEPL PLANT FILM</span>
+      <button onClick="{{ closeVideo }}" aria-label="Close" style="display:flex;align-items:center;justify-content:center;width:48px;height:48px;border:2px solid var(--ink);background:transparent;color:var(--ink);cursor:pointer" style-hover="{ background: 'var(--acc)', borderColor: '#00508E' }">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square"><line x1="5" y1="5" x2="19" y2="19"></line><line x1="19" y1="5" x2="5" y2="19"></line></svg>
+      </button>
+    </div>
+    <div style="position:relative;aspect-ratio:16/9;background:var(--bg3);border:2px solid var(--ink);display:flex;align-items:center;justify-content:center">
+      <div style="text-align:left;padding:clamp(20px,4vw,48px)">
+        <div style="color:var(--ink);font-size:clamp(18px,2.6vw,28px);font-weight:700;letter-spacing:-0.02em;line-height:1.1">PLANT FILM — TO BE CONFIRMED</div>
+        <p style="margin:12px 0 0;color:var(--mute);font-size:14px;line-height:1.55;max-width:46ch">Drop the final plant film into this frame. Prototype placeholder — no video asset has been supplied.</p>
+      </div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ HOME ══════════ -->
+<sc-if value="{{ atHome }}" hint-placeholder-val="{{ true }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="Home">
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2);min-height:min(82vh,760px)">
+    <div style="display:flex;flex-direction:column;justify-content:center;gap:28px;padding:clamp(48px,7vw,110px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+      <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">PARASMANI ENGINEERING PVT. LTD.</span>
+      <h1 data-words="1" style="margin:0;font-size:clamp(38px,5.6vw,82px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">ENGINEERING STEEL. BUILDING POSSIBILITY.</h1>
+      <p style="margin:0;max-width:50ch;font-size:clamp(15px,1.3vw,18px);line-height:1.55;color:var(--soft)">Engineering, detailing, CNC production, welding, surface treatment and inspection under one roof and one plan.</p>
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <button onClick="{{ goCapabilities }}" style="padding:18px 26px;border:2px solid #00508E;background:#00508E;color:#fff;font-size:12px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:56px" style-hover="{ background: '#0062AD', borderColor: '#0062AD' }">EXPLORE CAPABILITIES</button>
+        <button onClick="{{ goContact }}" style="padding:18px 26px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-size:12px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:56px" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">REQUEST A QUOTE</button>
+      </div>
+      <span style="font-size:10px;font-weight:600;letter-spacing:0.12em;color:var(--mute)">DRAG THE BACKGROUND TO ORBIT</span>
+    </div>
+    <div style="position:relative;min-height:400px;min-width:0">
+      <button onClick="{{ openVideo }}" style="position:absolute;left:0;bottom:0;display:flex;align-items:center;gap:12px;padding:16px 22px;border:0;background:#00508E;color:#fff;font-size:11px;font-weight:700;letter-spacing:0.08em;cursor:pointer;min-height:52px" style-hover="{ background: 'var(--bg)' }">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><polygon points="6,4 20,12 6,20"></polygon></svg>
+        PLAY PLANT FILM
+      </button>
+    </div>
+  </div>
+
+  <div style="overflow:hidden;border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:#00508E">
+    <div style="display:flex;width:max-content;animation:pepl-marquee 38s linear infinite">
+      <sc-for list="{{ tickerTwice }}" as="w" hint-placeholder-count="18">
+        <span style="display:flex;align-items:center;gap:22px;padding:14px 22px;font-size:11px;font-weight:700;letter-spacing:0.14em;color:#fff;white-space:nowrap">{{ w }}<span style="display:block;width:6px;height:6px;background:var(--bg)"></span></span>
+      </sc-for>
+    </div>
+  </div>
+
+  <div style="padding:clamp(24px,3vw,40px) clamp(16px,3vw,40px) 0">
+    <span style="font-size:11px;font-weight:600;letter-spacing:0.14em">PEPL AT A GLANCE</span>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));margin-top:clamp(20px,3vw,32px);border-top:2px solid rgba(var(--ink-rgb),0.2);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <sc-for list="{{ metrics }}" as="m" hint-placeholder-count="4">
+      <div style="padding:clamp(28px,4vw,48px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+        <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+          <span data-count="1" style="font-size:clamp(32px,4vw,52px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">{{ m.value }}</span>
+          <span style="font-size:15px;font-weight:600;letter-spacing:0.04em;color:var(--mute)">{{ m.unit }}</span>
+        </div>
+        <div style="margin-top:12px;font-size:11px;font-weight:600;letter-spacing:0.04em">{{ m.label }}</div>
+        <sc-if value="{{ m.pending }}" hint-placeholder-val="{{ true }}">
+          <span style="display:inline-block;margin-top:14px;padding:5px 9px;border:1px solid var(--acc);color:var(--acc);font-size:9px;font-weight:600;letter-spacing:0.08em">PENDING VERIFICATION</span>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+      <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">01 — CAPABILITY</span>
+      <h2 style="margin:20px 0 0;font-size:clamp(26px,3.4vw,44px);font-weight:700;letter-spacing:-0.025em;line-height:1">ENGINEERING + FABRICATION</h2>
+      <div style="margin-top:36px;border-top:2px solid rgba(var(--ink-rgb),0.2)">
+        <div style="padding:20px 0 12px;font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">HEAVY STEEL FABRICATION</div>
+        <sc-for list="{{ capHeavy }}" as="c" hint-placeholder-count="9">
+          <div style="padding:11px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14);font-size:15px">{{ c }}</div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px);min-width:0;display:flex;flex-direction:column">
+      <div style="height:clamp(180px,22vw,300px);margin-bottom:36px" class="grayscale"><image-slot id="mo-cap-home" shape="rect" src="./assets/stock/O.jpg" placeholder="Covered fabrication bay"></image-slot></div>
+      <div style="border-top:2px solid rgba(var(--ink-rgb),0.2)">
+        <div style="padding:20px 0 12px;font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">ENGINEERING &amp; DETAILING</div>
+        <sc-for list="{{ capEng }}" as="c" hint-placeholder-count="7">
+          <div style="padding:11px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14);font-size:15px">{{ c }}</div>
+        </sc-for>
+      </div>
+    </div>
+  </div>
+
+  <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px) 0">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(28px,4vw,48px)">
+      <div>
+        <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">02 — SECTORS</span>
+        <h2 style="margin:20px 0 0;font-size:clamp(26px,3.4vw,44px);font-weight:700;letter-spacing:-0.025em;line-height:1">INDUSTRIES WE SERVE</h2>
+      </div>
+      <button onClick="{{ goIndustries }}" style="padding:16px 22px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-size:11px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:52px" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">ALL INDUSTRIES</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));border-top:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <sc-for list="{{ industries }}" as="i" hint-placeholder-count="9">
+      <button onClick="{{ goIndustries }}" style="display:block;width:100%;text-align:left;padding:0;border:0;border-right:2px solid rgba(var(--ink-rgb),0.2);border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:transparent;color:inherit;cursor:pointer;min-width:0" style-hover="{ background: 'var(--bg2)' }">
+        <div style="height:clamp(130px,14vw,180px)" class="grayscale"><image-slot shape="rect" id="{{ i.slot }}" src="{{ i.img }}" placeholder="{{ i.name }}"></image-slot></div>
+        <div style="padding:20px clamp(16px,2vw,24px);border-top:2px solid rgba(var(--ink-rgb),0.2)">
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--acc)">{{ i.num }}</span>
+          <div style="margin-top:8px;font-size:15px;font-weight:700;letter-spacing:-0.01em">{{ i.name }}</div>
+        </div>
+      </button>
+    </sc-for>
+  </div>
+
+  <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px) 0">
+    <div style="display:flex;align-items:baseline;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:clamp(28px,4vw,48px)">
+      <div>
+        <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">03 — EVIDENCE</span>
+        <h2 style="margin:20px 0 0;font-size:clamp(26px,3.4vw,44px);font-weight:700;letter-spacing:-0.025em;line-height:1">SELECTED PROJECTS</h2>
+      </div>
+      <button onClick="{{ goProjects }}" style="padding:16px 22px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-size:11px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:52px" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">VIEW ALL PROJECTS</button>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));border-top:2px solid rgba(var(--ink-rgb),0.2);border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <sc-for list="{{ featured }}" as="p" hint-placeholder-count="3">
+      <div style="border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+        <div style="height:clamp(180px,20vw,240px)" class="grayscale"><image-slot shape="rect" id="{{ p.slot }}" src="{{ p.img }}" placeholder="{{ p.title }}"></image-slot></div>
+        <div style="padding:clamp(24px,3vw,36px) clamp(16px,2.5vw,32px);border-top:2px solid rgba(var(--ink-rgb),0.2)">
+          <span style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--acc)">{{ p.num }} · {{ p.industry }}</span>
+          <h3 style="margin:14px 0 22px;font-size:19px;font-weight:700;letter-spacing:-0.02em;line-height:1.15">{{ p.title }}</h3>
+          <div style="font-size:13px">
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14)"><span style="color:var(--mute)">Client</span><span style="font-weight:600;text-align:right">{{ p.client }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14)"><span style="color:var(--mute)">Scope</span><span style="font-weight:600;text-align:right">{{ p.scope }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14)"><span style="color:var(--mute)">Quantity</span><span style="font-weight:600;text-align:right">{{ p.qty }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:9px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14)"><span style="color:var(--mute)">Location</span><span style="font-weight:600;text-align:right">{{ p.location }}</span></div>
+          </div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+      <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">04 — RATIONALE</span>
+      <h2 style="margin:20px 0 36px;font-size:clamp(26px,3.4vw,44px);font-weight:700;letter-spacing:-0.025em;line-height:1">WHY PARTNER WITH PEPL?</h2>
+      <div style="border-top:2px solid rgba(var(--ink-rgb),0.2)">
+        <sc-for list="{{ why }}" as="w" hint-placeholder-count="6">
+          <div style="padding:20px 0;border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+            <div style="font-size:13px;font-weight:700;letter-spacing:0.04em">{{ w.title }}</div>
+            <p style="margin:8px 0 0;font-size:14px;line-height:1.55;color:var(--mute);max-width:48ch">{{ w.description }}</p>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+    <div style="min-width:0">
+      <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+        <h2 style="margin:0 0 28px;font-size:clamp(22px,2.6vw,32px);font-weight:700;letter-spacing:-0.025em;line-height:1">CLIENTS &amp; PROJECT PARTNERS</h2>
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:2px;background:rgba(var(--ink-rgb),0.2);border:2px solid rgba(var(--ink-rgb),0.2)">
+          <sc-for list="{{ clientSlots }}" as="c" hint-placeholder-count="8">
+            <div style="display:flex;align-items:center;justify-content:center;height:78px;background:var(--bg);font-size:10px;font-weight:600;letter-spacing:0.08em;color:var(--mute);min-width:0;text-align:center">{{ c }}</div>
+          </sc-for>
+        </div>
+        <p style="margin:18px 0 0;font-size:12px;line-height:1.55;color:var(--mute)">Client logos shown only with written permission.</p>
+      </div>
+      <sc-if value="{{ showCareers }}" hint-placeholder-val="{{ false }}">
+      <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px)">
+        <h2 style="margin:0 0 10px;font-size:clamp(22px,2.6vw,32px);font-weight:700;letter-spacing:-0.025em;line-height:1">BUILD THE NEXT PROJECT WITH US.</h2>
+        <p style="margin:0 0 28px;font-size:15px;line-height:1.55;color:var(--mute);max-width:42ch">Ownership is a job description here.</p>
+        <button onClick="{{ goCareers }}" style="padding:18px 26px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-size:12px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:56px" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">VIEW OPEN POSITIONS</button>
+      </div>
+      </sc-if>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ ABOUT ══════════ -->
+<sc-if value="{{ atAbout }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="About">
+  <div style="padding:clamp(56px,8vw,140px) clamp(16px,3vw,40px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">ABOUT</span>
+    <h1 data-words="1" style="margin:22px 0 0;font-size:clamp(34px,5vw,72px);font-weight:700;letter-spacing:-0.045em;line-height:0.92;max-width:20ch">AN ORGANISATION BUILT ON FOUR VALUES.</h1>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <sc-for list="{{ values }}" as="v" hint-placeholder-count="4">
+      <div style="padding:clamp(32px,4vw,56px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+        <div style="font-size:clamp(22px,2.6vw,30px);font-weight:700;letter-spacing:-0.025em;color:var(--acc)">{{ v.name }}</div>
+        <p style="margin:16px 0 0;font-size:14px;line-height:1.55;color:var(--soft)">{{ v.meaning }}</p>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <div style="padding:clamp(40px,5vw,80px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">VISION</div>
+      <p style="margin:22px 0 0;font-size:clamp(18px,2vw,25px);font-weight:700;letter-spacing:-0.025em;line-height:1.22">To become the world's most admired, result-driven, referred and preferred fabrication engineering organisation.</p>
+    </div>
+    <div style="padding:clamp(40px,5vw,80px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">MISSION</div>
+      <p style="margin:22px 0 0;font-size:16px;line-height:1.55;color:var(--soft)">Deliver engineered steel solutions through disciplined processes, capable people, technology and uncompromising quality.</p>
+    </div>
+    <div style="padding:clamp(40px,5vw,80px) clamp(16px,3vw,40px);min-width:0">
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">PURPOSE</div>
+      <p style="margin:22px 0 0;font-size:16px;line-height:1.55;color:var(--soft)">To transform engineering requirements into reliable, manufacturable and deliverable steel solutions.</p>
+    </div>
+  </div>
+  <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px) 0">
+    <h2 style="margin:0 0 clamp(28px,4vw,48px);font-size:clamp(26px,3.4vw,44px);font-weight:700;letter-spacing:-0.025em;line-height:1">LEADERSHIP</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));border-top:2px solid rgba(var(--ink-rgb),0.2);border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <sc-for list="{{ leaders }}" as="l" hint-placeholder-count="3">
+      <div style="border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+        <div style="height:clamp(220px,26vw,320px)" class="grayscale"><image-slot shape="rect" id="{{ l.slot }}" placeholder="{{ l.role }} — portrait"></image-slot></div>
+        <div style="padding:24px clamp(16px,2.5vw,32px);border-top:2px solid rgba(var(--ink-rgb),0.2)">
+          <div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--acc)">{{ l.role }}</div>
+          <div style="margin-top:10px;font-size:20px;font-weight:700;letter-spacing:-0.02em">{{ l.name }}</div>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="padding:clamp(56px,9vw,150px) clamp(16px,3vw,40px);background:#00508E;color:#fff">
+    <blockquote style="margin:0">
+      <p data-words="1" style="margin:0;font-size:clamp(28px,5vw,72px);font-weight:700;letter-spacing:-0.045em;line-height:0.94;max-width:22ch">ENGINEER WITH INTEGRITY. EXECUTE WITH OWNERSHIP. DELIVER WITH EXCELLENCE. CARE THROUGHOUT.</p>
+      <footer style="margin-top:36px;font-size:11px;font-weight:600;letter-spacing:0.14em;color:#fff">CMD STATEMENT · DAXESH SONI</footer>
+    </blockquote>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ CAPABILITIES ══════════ -->
+<sc-if value="{{ atCapabilities }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="Capabilities">
+  <div style="padding:clamp(56px,8vw,140px) clamp(16px,3vw,40px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">CAPABILITIES</span>
+    <h1 data-words="1" style="margin:22px 0 0;font-size:clamp(38px,5.6vw,82px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">ENGINEERED FOR COMPLEXITY.</h1>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <div style="border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+      <div style="height:clamp(200px,24vw,300px)" class="grayscale"><image-slot id="mo-cap-1" shape="rect" src="./assets/stock/G.jpg" placeholder="Built-up girder on the fit-up line"></image-slot></div>
+      <div style="padding:clamp(40px,5vw,80px) clamp(16px,3vw,40px);border-top:2px solid rgba(var(--ink-rgb),0.2)">
+        <h2 style="margin:0 0 28px;font-size:clamp(22px,2.8vw,34px);font-weight:700;letter-spacing:-0.025em;line-height:1">HEAVY STEEL FABRICATION</h2>
+        <div style="border-top:2px solid rgba(var(--ink-rgb),0.2)">
+          <sc-for list="{{ capHeavy }}" as="c" hint-placeholder-count="9">
+            <div style="display:flex;gap:16px;padding:14px 0;border-bottom:2px solid rgba(var(--ink-rgb),0.14);font-size:15px"><span style="color:var(--acc);font-weight:700;flex:none">—</span><span>{{ c }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+    <div style="min-width:0">
+      <div style="height:clamp(200px,24vw,300px)" class="grayscale"><image-slot id="mo-cap-2" shape="rect" src="./assets/stock/S.jpg" placeholder="Engineering / detailing workstation"></image-slot></div>
+      <div style="padding:clamp(40px,5vw,80px) clamp(16px,3vw,40px);border-top:2px solid rgba(var(--ink-rgb),0.2)">
+        <h2 style="margin:0 0 28px;font-size:clamp(22px,2.8vw,34px);font-weight:700;letter-spacing:-0.025em;line-height:1">ENGINEERING &amp; DETAILING</h2>
+        <div style="border-top:2px solid rgba(var(--ink-rgb),0.2)">
+          <sc-for list="{{ capEng }}" as="c" hint-placeholder-count="7">
+            <div style="display:flex;gap:16px;padding:14px 0;border-bottom:2px solid rgba(var(--ink-rgb),0.14);font-size:15px"><span style="color:var(--acc);font-weight:700;flex:none">—</span><span>{{ c }}</span></div>
+          </sc-for>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px)">
+    <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">PROCESS</span>
+    <h2 style="margin:20px 0 14px;font-size:clamp(26px,3.4vw,44px);font-weight:700;letter-spacing:-0.025em;line-height:1">FROM DRAWING TO DELIVERY</h2>
+    <p style="margin:0 0 clamp(28px,4vw,48px);font-size:16px;line-height:1.55;color:var(--mute);max-width:58ch">Nine controlled stages. Each carries a hold point, a document and a signature before the job moves on.</p>
+    <div style="border-top:2px solid rgba(var(--ink-rgb),0.2)">
+      <sc-for list="{{ process }}" as="p" hint-placeholder-count="9">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:clamp(8px,1.5vw,24px);padding:22px 0;border-bottom:2px solid rgba(var(--ink-rgb),0.14)">
+          <div style="min-width:0">
+            <span style="font-size:11px;font-weight:700;letter-spacing:0.1em;color:var(--acc)">{{ p.number }}</span>
+            <div style="margin-top:8px;font-size:17px;font-weight:700;letter-spacing:-0.02em">{{ p.name }}</div>
+          </div>
+          <div style="min-width:0"><div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--mute)">HOLD POINT</div><div style="margin-top:8px;font-size:14px">{{ p.hold_point }}</div></div>
+          <div style="min-width:0"><div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--mute)">DOCUMENT</div><div style="margin-top:8px;font-size:14px">{{ p.document }}</div></div>
+          <div style="min-width:0"><div style="font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--mute)">SIGNATURE</div><div style="margin-top:8px;font-size:14px">{{ p.signature }}</div></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ INDUSTRIES ══════════ -->
+<sc-if value="{{ atIndustries }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="Industries">
+  <div style="padding:clamp(56px,8vw,140px) clamp(16px,3vw,40px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">INDUSTRIES</span>
+    <h1 data-words="1" style="margin:22px 0 0;font-size:clamp(38px,5.6vw,82px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">ENGINEERED FOR INDUSTRY.</h1>
+  </div>
+  <sc-for list="{{ industries }}" as="i" hint-placeholder-count="9">
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+      <div style="min-height:clamp(240px,26vw,340px);position:relative;border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0" class="grayscale"><image-slot shape="rect" id="{{ i.slotBig }}" src="{{ i.img }}" placeholder="{{ i.name }}"></image-slot></div>
+      <div style="padding:clamp(40px,5vw,90px) clamp(16px,3vw,40px);min-width:0">
+        <span style="font-size:11px;font-weight:600;letter-spacing:0.1em;color:var(--acc)">{{ i.num }}</span>
+        <h2 style="margin:16px 0 20px;font-size:clamp(24px,3vw,40px);font-weight:700;letter-spacing:-0.025em;line-height:1">{{ i.nameUpper }}</h2>
+        <p style="margin:0 0 28px;font-size:16px;line-height:1.55;max-width:48ch;color:var(--soft)">{{ i.long }}</p>
+        <button onClick="{{ goProjects }}" style="padding:16px 22px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-size:11px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:52px" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">VIEW RELATED PROJECTS</button>
+      </div>
+    </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<!-- ══════════ PROJECTS ══════════ -->
+<sc-if value="{{ atProjects }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="Projects">
+  <div style="padding:clamp(56px,8vw,140px) clamp(16px,3vw,40px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">PROJECTS</span>
+    <h1 data-words="1" style="margin:22px 0 18px;font-size:clamp(38px,5.6vw,82px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">PROJECTS ARE THE PROOF.</h1>
+    <p style="margin:0;font-size:15px;line-height:1.55;color:var(--mute);max-width:56ch">Project information will be added after verification. Unconfirmed fields are shown as "To be confirmed" rather than estimated.</p>
+  </div>
+  <sc-for list="{{ projects }}" as="p" hint-placeholder-count="6">
+    <div style="border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr))">
+        <div style="padding:clamp(40px,5vw,80px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+          <span style="font-size:11px;font-weight:600;letter-spacing:0.1em;color:var(--acc)">PROJECT {{ p.num }}</span>
+          <h2 style="margin:16px 0 28px;font-size:clamp(22px,2.8vw,36px);font-weight:700;letter-spacing:-0.025em;line-height:1">{{ p.title }}</h2>
+          <div style="border-top:2px solid rgba(var(--ink-rgb),0.2);font-size:14px">
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14)"><span style="color:var(--mute)">Client</span><span style="font-weight:600;text-align:right">{{ p.client }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14)"><span style="color:var(--mute)">Industry</span><span style="font-weight:600;text-align:right">{{ p.industry }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14)"><span style="color:var(--mute)">Scope</span><span style="font-weight:600;text-align:right">{{ p.scope }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14)"><span style="color:var(--mute)">Quantity</span><span style="font-weight:600;text-align:right">{{ p.qty }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0;border-bottom:1px solid rgba(var(--ink-rgb),0.14)"><span style="color:var(--mute)">Location</span><span style="font-weight:600;text-align:right">{{ p.location }}</span></div>
+            <div style="display:flex;justify-content:space-between;gap:16px;padding:12px 0"><span style="color:var(--mute)">Status</span><span style="font-weight:600;text-align:right;padding:4px 8px;border:1px solid rgba(var(--ink-rgb),0.3);font-size:11px;letter-spacing:0.06em">{{ p.status }}</span></div>
+          </div>
+        </div>
+        <div style="min-height:clamp(260px,30vw,380px);position:relative;min-width:0" class="grayscale"><image-slot shape="rect" id="{{ p.slotBig }}" src="{{ p.img }}" placeholder="{{ p.title }}"></image-slot></div>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-top:2px solid rgba(var(--ink-rgb),0.2)">
+        <sc-for list="{{ p.stages }}" as="st" hint-placeholder-count="5">
+          <div style="border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+            <div style="height:clamp(110px,12vw,150px)" class="grayscale"><image-slot shape="rect" id="{{ st.slot }}" src="{{ st.img }}" placeholder="{{ st.name }}"></image-slot></div>
+            <div style="padding:12px 16px;border-top:2px solid rgba(var(--ink-rgb),0.2);font-size:10px;font-weight:600;letter-spacing:0.1em">{{ st.name }}</div>
+          </div>
+        </sc-for>
+      </div>
+    </div>
+  </sc-for>
+</div>
+</sc-if>
+
+<!-- ══════════ FACILITY ══════════ -->
+<sc-if value="{{ atFacility }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="Facility">
+  <div style="position:relative;min-height:clamp(320px,42vw,500px);display:flex;align-items:flex-end;border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <div style="position:absolute;inset:0" class="grayscale"><image-slot id="mo-fac-hero" shape="rect" src="./assets/stock/A.jpg" placeholder="PEPL facility aerial / exterior"></image-slot></div>
+    <div style="position:relative;padding:clamp(32px,4vw,64px) clamp(16px,3vw,40px);background:var(--bg);border-top:2px solid rgba(var(--ink-rgb),0.2);border-right:2px solid rgba(var(--ink-rgb),0.2);max-width:720px">
+      <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">FACILITY</span>
+      <h1 data-words="1" style="margin:18px 0 0;font-size:clamp(30px,4.4vw,64px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">WHERE ENGINEERING BECOMES REAL.</h1>
+    </div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <sc-for list="{{ metrics }}" as="m" hint-placeholder-count="4">
+      <div style="padding:clamp(28px,4vw,48px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+        <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap">
+          <span data-count="1" style="font-size:clamp(32px,4vw,52px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">{{ m.value }}</span>
+          <span style="font-size:15px;font-weight:600;letter-spacing:0.04em;color:var(--mute)">{{ m.unit }}</span>
+        </div>
+        <div style="margin-top:12px;font-size:11px;font-weight:600;letter-spacing:0.04em">{{ m.label }}</div>
+        <sc-if value="{{ m.pending }}" hint-placeholder-val="{{ true }}">
+          <span style="display:inline-block;margin-top:14px;padding:5px 9px;border:1px solid var(--acc);color:var(--acc);font-size:9px;font-weight:600;letter-spacing:0.08em">PENDING VERIFICATION</span>
+        </sc-if>
+      </div>
+    </sc-for>
+  </div>
+  <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px) 0">
+    <h2 style="margin:0 0 14px;font-size:clamp(26px,3.4vw,44px);font-weight:700;letter-spacing:-0.025em;line-height:1">PLANT &amp; MACHINERY</h2>
+    <p style="margin:0 0 clamp(28px,4vw,48px);font-size:16px;line-height:1.55;color:var(--mute);max-width:54ch">Machine specifications are published only once verified against the asset register.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));border-top:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <sc-for list="{{ machines }}" as="m" hint-placeholder-count="12">
+      <div style="border-right:2px solid rgba(var(--ink-rgb),0.2);border-bottom:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+        <div style="height:clamp(150px,16vw,200px)" class="grayscale"><image-slot shape="rect" id="{{ m.slot }}" src="{{ m.img }}" placeholder="{{ m.name }}"></image-slot></div>
+        <div style="padding:22px clamp(16px,2.5vw,28px);border-top:2px solid rgba(var(--ink-rgb),0.2)">
+          <div style="font-size:16px;font-weight:700;letter-spacing:-0.015em;line-height:1.2">{{ m.name }}</div>
+          <p style="margin:10px 0 0;font-size:13px;line-height:1.5;color:var(--mute)">{{ m.fn }}</p>
+          <span style="display:inline-block;margin-top:14px;padding:5px 9px;border:1px solid rgba(var(--ink-rgb),0.3);color:var(--mute);font-size:9px;font-weight:600;letter-spacing:0.08em">SPECIFICATIONS PENDING VERIFICATION</span>
+        </div>
+      </div>
+    </sc-for>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ QUALITY ══════════ -->
+<sc-if value="{{ atQuality }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="Quality">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <div style="padding:clamp(56px,8vw,140px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+      <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">QUALITY</span>
+      <h1 data-words="1" style="margin:22px 0 24px;font-size:clamp(30px,4.4vw,64px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">QUALITY IS ENGINEERED INTO EVERY STAGE.</h1>
+      <p style="margin:0;font-size:16px;line-height:1.55;max-width:50ch;color:var(--soft)">Welder qualifications, NDT, hold points and dispatch documentation are controlled by procedure. Third-party and client inspection are accommodated at any stage.</p>
+    </div>
+    <div style="min-height:clamp(260px,30vw,380px);position:relative;min-width:0" class="grayscale"><image-slot id="mo-qa-hero" shape="rect" src="./assets/stock/Q.jpg" placeholder="QC inspection — UT probe on weld"></image-slot></div>
+  </div>
+  <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <h2 style="margin:0 0 clamp(24px,3vw,40px);font-size:clamp(22px,2.8vw,34px);font-weight:700;letter-spacing:-0.025em;line-height:1">CERTIFICATIONS &amp; APPROVALS</h2>
+    <div style="border-top:2px solid rgba(var(--ink-rgb),0.2)">
+      <sc-for list="{{ certs }}" as="c" hint-placeholder-count="7">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:clamp(8px,1.5vw,24px);padding:20px 0;border-bottom:2px solid rgba(var(--ink-rgb),0.14);align-items:baseline">
+          <div style="font-size:17px;font-weight:700;letter-spacing:-0.02em;min-width:0">{{ c.name }}</div>
+          <div style="min-width:0"><span style="display:inline-block;padding:5px 9px;border:1px solid rgba(var(--ink-rgb),0.3);font-size:10px;font-weight:600;letter-spacing:0.08em;color:var(--soft)">{{ c.status }}</span></div>
+          <div style="font-size:14px;color:var(--mute);min-width:0">{{ c.evidence }}</div>
+          <div style="min-width:0"><button onClick="{{ download }}" style="border:0;background:transparent;color:var(--acc);font-size:13px;font-weight:600;padding:0;cursor:pointer;text-align:left" style-hover="{ color: 'var(--ink)' }">{{ c.download }}</button></div>
+        </div>
+      </sc-for>
+    </div>
+    <p style="margin:20px 0 0;font-size:12px;line-height:1.55;color:var(--mute)">Only formally held certificates are published. No approval is implied until verified.</p>
+  </div>
+  <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px) 0">
+    <h2 style="margin:0 0 clamp(24px,3vw,40px);font-size:clamp(22px,2.8vw,34px);font-weight:700;letter-spacing:-0.025em;line-height:1">DOWNLOADS</h2>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));border-top:2px solid rgba(var(--ink-rgb),0.2);border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <sc-for list="{{ downloads }}" as="d" hint-placeholder-count="5">
+      <button onClick="{{ download }}" style="display:block;width:100%;text-align:left;padding:clamp(28px,3.5vw,44px) clamp(16px,2.5vw,32px);border:0;border-right:2px solid rgba(var(--ink-rgb),0.2);background:transparent;color:inherit;cursor:pointer;min-width:0;min-height:56px" style-hover="{ background: 'var(--bg2)' }">
+        <div style="font-size:17px;font-weight:700;letter-spacing:-0.02em">{{ d.name }}</div>
+        <div style="margin-top:10px;font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--acc)">{{ d.meta }} ↓</div>
+      </button>
+    </sc-for>
+  </div>
+  <sc-if value="{{ downloaded }}" hint-placeholder-val="{{ false }}">
+    <div style="margin:clamp(24px,3vw,40px) clamp(16px,3vw,40px);padding:18px 22px;border:2px solid var(--acc);font-size:13px;font-weight:600">Prototype — the production build serves the document here.</div>
+  </sc-if>
+</div>
+</sc-if>
+
+<!-- ══════════ TECHNOLOGY ══════════ -->
+<sc-if value="{{ atTechnology }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="Technology">
+  <div style="padding:clamp(56px,8vw,140px) clamp(16px,3vw,40px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">TECHNOLOGY</span>
+    <h1 data-words="1" style="margin:22px 0 24px;font-size:clamp(38px,5.6vw,82px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">ONE DATA CHAIN. NOTHING RE-TYPED.</h1>
+    <p style="margin:0;font-size:clamp(15px,1.3vw,18px);line-height:1.55;max-width:58ch;color:var(--soft)">Engineering information should flow into production without unnecessary manual re-entry.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <sc-for list="{{ chain }}" as="s" hint-placeholder-count="6">
+      <div style="padding:clamp(28px,3.5vw,44px) clamp(16px,2.5vw,28px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;color:var(--acc)">{{ s.num }}</div>
+        <div style="margin-top:14px;font-size:15px;font-weight:700;letter-spacing:-0.015em;line-height:1.2">{{ s.name }}</div>
+      </div>
+    </sc-for>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <sc-for list="{{ tech }}" as="t" hint-placeholder-count="7">
+      <div style="padding:clamp(32px,4vw,56px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);border-bottom:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.1em;color:var(--acc)">{{ t.num }}</div>
+        <h3 style="margin:14px 0 10px;font-size:18px;font-weight:700;letter-spacing:-0.02em">{{ t.name }}</h3>
+        <p style="margin:0;font-size:14px;line-height:1.55;color:var(--mute)">{{ t.body }}</p>
+      </div>
+    </sc-for>
+  </div>
+  <div style="height:clamp(260px,34vw,440px);position:relative" class="grayscale"><image-slot id="mo-tech-hero" shape="rect" src="./assets/stock/U.jpg" placeholder="CNC control panel / nesting screen"></image-slot></div>
+</div>
+</sc-if>
+
+<!-- ══════════ CAREERS ══════════ -->
+<sc-if value="{{ atCareers }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="Careers">
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <div style="padding:clamp(56px,8vw,140px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+      <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">CAREERS</span>
+      <h1 data-words="1" style="margin:22px 0 24px;font-size:clamp(30px,4.4vw,64px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">OWNERSHIP IS A JOB DESCRIPTION HERE.</h1>
+      <p style="margin:0;font-size:16px;line-height:1.55;max-width:48ch;color:var(--soft)">PEPL is building its engineering, production and quality functions. Write to us with the role in the subject line.</p>
+    </div>
+    <div style="min-height:clamp(260px,30vw,380px);position:relative;min-width:0" class="grayscale"><image-slot id="mo-careers" shape="rect" src="./assets/stock/K.jpg" placeholder="Engineering team on the shop floor"></image-slot></div>
+  </div>
+  <div style="padding:clamp(48px,7vw,120px) clamp(16px,3vw,40px)">
+    <h2 style="margin:0 0 clamp(24px,3vw,40px);font-size:clamp(22px,2.8vw,34px);font-weight:700;letter-spacing:-0.025em;line-height:1">OPEN ROLES</h2>
+    <div style="border-top:2px solid rgba(var(--ink-rgb),0.2)">
+      <sc-for list="{{ roles }}" as="r" hint-placeholder-count="8">
+        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:clamp(8px,1.5vw,24px);padding:20px 0;border-bottom:2px solid rgba(var(--ink-rgb),0.14);align-items:baseline">
+          <div style="font-size:17px;font-weight:700;letter-spacing:-0.02em;min-width:0">{{ r.role }}</div>
+          <div style="font-size:14px;color:var(--soft);min-width:0">{{ r.department }}</div>
+          <div style="font-size:14px;color:var(--mute);min-width:0">Viramgam, Gujarat</div>
+          <div style="min-width:0"><a href="{{ r.mailto }}" style="color:var(--acc);font-weight:600;font-size:13px">APPLY NOW →</a></div>
+        </div>
+      </sc-for>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<!-- ══════════ CONTACT ══════════ -->
+<sc-if value="{{ atContact }}" hint-placeholder-val="{{ false }}">
+<div ref="{{ screenRef }}" data-anim="screen" data-screen-label="Contact">
+  <div style="padding:clamp(56px,8vw,140px) clamp(16px,3vw,40px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <span style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">CONTACT</span>
+    <h1 data-words="1" style="margin:22px 0 24px;font-size:clamp(34px,5vw,72px);font-weight:700;letter-spacing:-0.045em;line-height:0.92;max-width:22ch">LET'S ENGINEER YOUR NEXT PROJECT.</h1>
+    <p style="margin:0;font-size:clamp(15px,1.3vw,18px);line-height:1.55;max-width:56ch;color:var(--soft)">Share your project requirements, drawings or BOQ and our team can review the scope.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(340px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2);background:var(--bg)">
+    <div style="padding:clamp(40px,5vw,80px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+      <h2 style="margin:0 0 clamp(24px,3vw,36px);font-size:clamp(20px,2.4vw,28px);font-weight:700;letter-spacing:-0.025em">REQUEST FOR QUOTE</h2>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px">
+        <sc-for list="{{ fields }}" as="f" hint-placeholder-count="10">
+          <div style="min-width:0">
+            <label for="{{ f.id }}" style="display:block;font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--mute);margin-bottom:8px">{{ f.label }}</label>
+            <input id="{{ f.id }}" type="{{ f.type }}" placeholder="{{ f.placeholder }}" aria-required="{{ f.required }}" aria-invalid="{{ f.invalid }}" value="{{ f.value }}" onChange="{{ f.onChange }}" style="{{ f.style }}">
+            <sc-if value="{{ f.showError }}" hint-placeholder-val="{{ false }}">
+              <span style="display:block;margin-top:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--acc)">{{ f.error }}</span>
+            </sc-if>
+          </div>
+        </sc-for>
+      </div>
+      <div style="margin-top:20px">
+        <label for="rfq-scope" style="display:block;font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--mute);margin-bottom:8px">SCOPE OF WORK *</label>
+        <textarea id="rfq-scope" rows="4" placeholder="Fabrication only / fabrication + surface treatment / supply + erection…" onChange="{{ onScope }}" style="{{ scopeStyle }}"></textarea>
+        <sc-if value="{{ scopeError }}" hint-placeholder-val="{{ false }}">
+          <span style="display:block;margin-top:6px;font-size:11px;font-weight:600;letter-spacing:0.04em;color:var(--acc)">Scope of work is required.</span>
+        </sc-if>
+      </div>
+      <div style="margin-top:24px;padding:clamp(28px,4vw,44px) clamp(16px,2.5vw,28px);border:2px dashed rgba(var(--ink-rgb),0.3)">
+        <div style="font-size:15px;font-weight:700;letter-spacing:-0.015em">DRAWING / BOQ</div>
+        <p style="margin:8px 0 18px;font-size:13px;line-height:1.5;color:var(--mute)">PDF, DWG, XLS, XLSX or ZIP</p>
+        <button onClick="{{ chooseFiles }}" style="padding:16px 22px;border:2px solid var(--ink);background:transparent;color:var(--ink);font-size:11px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:52px" style-hover="{ background: 'var(--ink)', color: 'var(--bg)' }">CHOOSE FILES</button>
+        <sc-if value="{{ fileChosen }}" hint-placeholder-val="{{ false }}">
+          <div style="margin-top:14px;font-size:12px;font-weight:600;color:var(--mute)">drawing-set-rev-A.pdf · 4.2 MB (prototype)</div>
+        </sc-if>
+      </div>
+      <button onClick="{{ submit }}" style="display:block;width:100%;margin-top:24px;padding:20px 26px;border:2px solid #00508E;background:#00508E;color:#fff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:60px" style-hover="{ background: '#0062AD', borderColor: '#0062AD' }">SUBMIT RFQ</button>
+      <sc-if value="{{ formError }}" hint-placeholder-val="{{ false }}">
+        <div role="alert" style="margin-top:18px;padding:16px 20px;border:2px solid var(--acc);color:var(--acc);font-size:13px;font-weight:600">Please check the highlighted fields and try again.</div>
+      </sc-if>
+      <sc-if value="{{ sent }}" hint-placeholder-val="{{ false }}">
+        <div role="status" style="margin-top:18px;padding:16px 20px;border:2px solid var(--ink);background:var(--bg2);font-size:13px;font-weight:600">Thank you. Your RFQ has been received. Our team will review the submitted information.</div>
+      </sc-if>
+    </div>
+    <div style="min-width:0">
+      <div style="padding:clamp(32px,4vw,56px) clamp(16px,3vw,40px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+        <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">WORKS &amp; REGISTERED OFFICE</div>
+        <p style="margin:18px 0 0;font-size:16px;line-height:1.6;max-width:38ch">Parasmani Engineering Pvt. Ltd.<br>Village Vani, Taluka Viramgam,<br>Dist. Ahmedabad, Gujarat 382150, India</p>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+        <div style="padding:clamp(32px,4vw,56px) clamp(16px,3vw,40px);border-right:2px solid rgba(var(--ink-rgb),0.2);min-width:0">
+          <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">PHONE</div>
+          <a href="tel:+919879795382" style="display:block;margin-top:16px;font-size:clamp(17px,1.9vw,22px);font-weight:700;letter-spacing:-0.02em">+91 98797 95382</a>
+        </div>
+        <div style="padding:clamp(32px,4vw,56px) clamp(16px,3vw,40px);min-width:0">
+          <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">EMAIL</div>
+          <a href="mailto:info@parasmaniengineering.com" style="display:block;margin-top:16px;font-size:15px;font-weight:700;letter-spacing:-0.01em;word-break:break-all">info@parasmaniengineering.com</a>
+        </div>
+      </div>
+      <div style="height:clamp(260px,30vw,380px);position:relative" class="grayscale"><image-slot id="mo-map" shape="rect" placeholder="Works location map / gate photograph"></image-slot></div>
+    </div>
+  </div>
+</div>
+</sc-if>
+
+<div style="padding:clamp(56px,9vw,150px) clamp(16px,3vw,40px);background:#00508E;color:#fff">
+  <h2 data-words="1" style="margin:0 0 36px;font-size:clamp(30px,6vw,86px);font-weight:700;letter-spacing:-0.045em;line-height:0.92;max-width:20ch">NOT JUST FABRICATION. FABRICATION ENGINEERING.</h2>
+  <div style="display:flex;gap:14px;flex-wrap:wrap">
+    <button onClick="{{ goContact }}" style="padding:20px 28px;border:2px solid #fff;background:#fff;color:#00508E;font-size:13px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:60px" style-hover="{ background: 'transparent', color: '#fff' }">REQUEST A QUOTE</button>
+    <button onClick="{{ download }}" style="padding:20px 28px;border:2px solid #fff;background:transparent;color:#fff;font-size:13px;font-weight:700;letter-spacing:0.06em;text-align:left;cursor:pointer;min-height:60px" style-hover="{ background: '#fff', color: '#00508E' }">COMPANY PROFILE</button>
+  </div>
+</div>
+
+<footer style="background:var(--bg3);color:var(--ink)">
+  <div style="padding:clamp(48px,6vw,90px) clamp(16px,3vw,40px) clamp(32px,4vw,56px);border-bottom:2px solid rgba(var(--ink-rgb),0.2)">
+    <div style="font-size:clamp(30px,6vw,86px);font-weight:700;letter-spacing:-0.045em;line-height:0.92">ENGINEERED TO DELIVER.</div>
+    <div style="margin-top:24px;font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--acc)">INTEGRITY · OWNERSHIP · EXCELLENCE · CARE</div>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:clamp(28px,4vw,48px);padding:clamp(40px,5vw,72px) clamp(16px,3vw,40px)">
+    <div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--mute);margin-bottom:20px">NAVIGATE</div>
+      <div style="display:grid;gap:10px">
+        <sc-for list="{{ nav }}" as="n" hint-placeholder-count="10">
+          <button onClick="{{ n.go }}" style="text-align:left;border:0;background:transparent;color:var(--ink);font-size:12px;font-weight:600;letter-spacing:0.04em;padding:0;cursor:pointer;width:fit-content" style-hover="{ color: 'var(--acc)' }">{{ n.label }}</button>
+        </sc-for>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--mute);margin-bottom:20px">CONTACT</div>
+      <div style="font-size:13px;line-height:1.9">+91 98797 95382<br>info@parasmaniengineering.com<br>Village Vani, Taluka Viramgam<br>Dist. Ahmedabad, Gujarat 382150</div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--mute);margin-bottom:20px">LEGAL</div>
+      <div style="display:grid;gap:10px;font-size:13px">
+        <a href="#" style="width:fit-content">Privacy Policy</a>
+        <a href="#" style="width:fit-content">Terms</a>
+      </div>
+    </div>
+    <div>
+      <div style="font-size:11px;font-weight:600;letter-spacing:0.14em;color:var(--mute);margin-bottom:20px">ORGANISATION</div>
+      <p style="margin:0;font-size:13px;line-height:1.7;color:var(--mute);max-width:34ch">Parasmani Engineering Pvt. Ltd. — a fabrication engineering organisation delivering engineered steel for India's infrastructure and industrial sectors.</p>
+    </div>
+  </div>
+  <div style="padding:20px clamp(16px,3vw,40px);border-top:2px solid var(--acc);font-size:10px;font-weight:600;letter-spacing:0.1em;color:var(--mute)">© PARASMANI ENGINEERING PVT. LTD.</div>
+</footer>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{
+  &quot;startScreen&quot;: { &quot;editor&quot;: &quot;enum&quot;, &quot;options&quot;: [&quot;home&quot;, &quot;about&quot;, &quot;capabilities&quot;, &quot;industries&quot;, &quot;projects&quot;, &quot;facility&quot;, &quot;quality&quot;, &quot;technology&quot;, &quot;careers&quot;, &quot;contact&quot;], &quot;default&quot;: &quot;home&quot;, &quot;tsType&quot;: &quot;string&quot;, &quot;section&quot;: &quot;Prototype&quot; },
+  &quot;showCareers&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: false, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Prototype&quot; },
+  &quot;showBackground&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Motion&quot; },
+  &quot;showVerificationFlags&quot;: { &quot;editor&quot;: &quot;boolean&quot;, &quot;default&quot;: true, &quot;tsType&quot;: &quot;boolean&quot;, &quot;section&quot;: &quot;Prototype&quot; }
+}">
+class Component extends DCLogic {
+  state = {
+    screen: null, menuOpen: false, videoOpen: false,
+    sent: false, formError: false, touched: false,
+    downloaded: false, fileChosen: false,
+    vals: {}, width: typeof window !== "undefined" ? window.innerWidth : 1400
+  };
+
+  constructor(props) {
+    super(props);
+    this.bgRef = React.createRef();
+    this.barRef = React.createRef();
+    this.screenRef = React.createRef();
+  }
+
+  applyMono(on) {
+    document.documentElement.setAttribute("data-theme", on ? "light" : "dark");
+    if (this.bg && this.bg.setTheme) this.bg.setTheme(on ? "light" : "dark");
+  }
+
+  readHash() {
+    const parts = (location.hash || "").replace(/^#/, "").split("/").filter(Boolean);
+    const screens = ["home", "about", "capabilities", "industries", "projects", "facility", "quality", "technology", "careers", "contact"];
+    return {
+      screen: parts.find((p) => screens.includes(p)),
+      static: parts.includes("static"),
+      light: parts.includes("light"), dark: parts.includes("dark")
+    };
+  }
+
+  componentDidMount() {
+    const h = this.readHash();
+    this.staticMode = h.static;
+    if (h.screen) this.setState({ screen: h.screen });
+    this.onHash = () => { const n = this.readHash(); if (n.screen && n.screen !== this.currentScreen()) { this.setState({ screen: n.screen }); window.scrollTo(0, 0); } };
+    window.addEventListener("hashchange", this.onHash);
+    let mono = false;
+    try { mono = localStorage.getItem("pepl-mono") === "1"; } catch (e) {}
+    if (h.light) mono = true;
+    if (h.dark) mono = false;
+    if (mono) { this.setState({ mono: true }); this.applyMono(true); }
+    this.onResize = () => this.setState({ width: window.innerWidth });
+    window.addEventListener("resize", this.onResize);
+    this.reduced = this.staticMode || window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+    this.onScroll = () => {
+      if (!this.barRef.current) return;
+      const doc = document.scrollingElement || document.documentElement;
+      const span = doc.scrollHeight - window.innerHeight;
+      this.barRef.current.style.width = (span > 0 ? (window.scrollY / span) * 100 : 0).toFixed(1) + "%";
+    };
+    window.addEventListener("scroll", this.onScroll, { passive: true });
+
+    if (this.props.showBackground !== false && !this.staticMode) this.startBackground();
+
+    if (this.reduced) return;
+    this.tag();
+    this.fallback = setTimeout(() => {
+      if (!this.motion) document.documentElement.setAttribute("data-motion-off", "");
+    }, 1600);
+    clearTimeout(this.fallback);
+    this.motion = this.makeMotion();
+    this.wire();
+  }
+
+  makeMotion() {
+    const list = (t) => (t && t.length !== undefined && !t.tagName) ? Array.from(t) : [t];
+    return {
+      stagger: (s) => (i) => i * s,
+      inView: (el, cb, o) => {
+        const io = new IntersectionObserver((es) => {
+          if (es.some((e) => e.isIntersecting)) { io.disconnect(); cb(); }
+        }, { threshold: (o && o.amount) || 0 });
+        io.observe(el);
+      },
+      animate: (targets, kf, opts) => {
+        const from = {}, to = {};
+        if (kf.opacity) { from.opacity = kf.opacity[0]; to.opacity = kf.opacity[1]; }
+        if (kf.y) { from.transform = "translateY(" + kf.y[0] + "px)"; to.transform = "translateY(" + kf.y[1] + "px)"; }
+        if (kf.transform) { from.transform = kf.transform[0]; to.transform = kf.transform[1]; }
+        const e = opts.ease || [0.16, 1, 0.3, 1];
+        const anims = list(targets).map((el, i) => el.animate([from, to], {
+          duration: (opts.duration || 0.6) * 1000,
+          delay: (typeof opts.delay === "function" ? opts.delay(i) : (opts.delay || 0)) * 1000,
+          easing: "cubic-bezier(" + e.join(",") + ")", fill: "both"
+        }));
+        return { finished: Promise.all(anims.map((a) => a.finished)) };
+      }
+    };
+  }
+
+  startBackground() {
+    let tries = 0;
+    const go = () => {
+      if (!window.PEPLBackground || !this.bgRef.current) {
+        if (tries++ < 240) return requestAnimationFrame(go);
+        return;
+      }
+      this.bg = window.PEPLBackground.mount(this.bgRef.current);
+      this.bg.setVariant(this.variantFor(this.currentScreen()));
+      if (this.state.mono && this.bg.setTheme) this.bg.setTheme("light");
+    };
+    go();
+  }
+
+  currentScreen() { return this.state.screen ?? (this.props.startScreen || "home"); }
+
+  variantFor(screen) {
+    const map = {
+      home: 0, about: 2, capabilities: 1, industries: 3, projects: 1,
+      facility: 3, quality: 2, technology: 0, careers: 2, contact: 1
+    };
+    return map[screen] ?? 0;
+  }
+
+  componentDidUpdate(prevProps, prevState) {
+    const screen = this.currentScreen();
+    if (this.bg && screen !== this.lastScreen) this.bg.setVariant(this.variantFor(screen));
+    if (this.reduced) { this.lastScreen = screen; return; }
+    this.tag();
+    if (this.motion) {
+      if (screen !== this.lastScreen && this.screenRef.current) {
+        this.motion.animate(this.screenRef.current,
+          { opacity: [0, 1], y: [26, 0] },
+          { duration: 0.5, ease: [0.16, 1, 0.3, 1] });
+      }
+      this.wire();
+    }
+    this.lastScreen = screen;
+  }
+
+  componentWillUnmount() {
+    clearTimeout(this.fallback);
+    window.removeEventListener("resize", this.onResize);
+    window.removeEventListener("hashchange", this.onHash);
+    window.removeEventListener("scroll", this.onScroll);
+    if (this.bg) this.bg.dispose();
+  }
+
+  // Split headlines into per-word spans once, so they can rise in sequence.
+  splitWords() {
+    document.querySelectorAll("[data-words]:not([data-words-done])").forEach((el) => {
+      el.dataset.wordsDone = "1";
+      const words = (el.textContent || "").trim().split(/\s+/);
+      el.textContent = "";
+      words.forEach((w, i) => {
+        const outer = document.createElement("span");
+        outer.style.display = "inline-block";
+        outer.style.overflow = "hidden";
+        outer.style.verticalAlign = "bottom";
+        const inner = document.createElement("span");
+        inner.style.display = "inline-block";
+        inner.textContent = w + (i < words.length - 1 ? "\u00A0" : "");
+        inner.setAttribute("data-word", "1");
+        outer.appendChild(inner);
+        el.appendChild(outer);
+      });
+    });
+  }
+
+  tag() {
+    this.splitWords();
+    document.querySelectorAll('[data-anim="screen"]').forEach((scr) => {
+      Array.from(scr.children).forEach((block) => {
+        if (block.dataset.animScanned) return;
+        block.dataset.animScanned = "1";
+        const kids = Array.from(block.children);
+        const grid = kids.length >= 3 && getComputedStyle(block).display === "grid";
+        (grid ? kids : [block]).forEach((t) => { if (!t.dataset.animDone) t.setAttribute("data-reveal", ""); });
+        block.dataset.animStagger = grid ? "1" : "0";
+      });
+    });
+  }
+
+  countUp(el) {
+    if (el.dataset.countDone) return;
+    el.dataset.countDone = "1";
+    const raw = (el.textContent || "").trim();
+    const m = raw.match(/^([\d,]+)$/);
+    if (!m) return;
+    const end = parseInt(m[1].replace(/,/g, ""), 10);
+    if (!isFinite(end) || end < 10) return;
+    const t0 = performance.now();
+    const dur = 1100;
+    const step = (t) => {
+      const k = Math.min(1, (t - t0) / dur);
+      const eased = 1 - Math.pow(1 - k, 3);
+      el.textContent = Math.round(end * eased).toLocaleString("en-IN");
+      if (k < 1) requestAnimationFrame(step);
+      else el.textContent = raw;
+    };
+    el.textContent = "0";
+    requestAnimationFrame(step);
+  }
+
+  wire() {
+    const { animate, inView, stagger } = this.motion;
+
+    document.querySelectorAll("[data-words][data-words-done]:not([data-words-wired])").forEach((el) => {
+      el.dataset.wordsWired = "1";
+      const words = el.querySelectorAll("[data-word]");
+      if (!words.length) return;
+      words.forEach((w) => { w.style.transform = "translateY(105%)"; });
+      inView(el, () => {
+        animate(words, { transform: ["translateY(105%)", "translateY(0%)"] },
+          { duration: 0.75, ease: [0.16, 1, 0.3, 1], delay: stagger(0.045) });
+      }, { amount: 0.3 });
+    });
+
+    document.querySelectorAll("[data-count]:not([data-count-wired])").forEach((el) => {
+      el.dataset.countWired = "1";
+      inView(el, () => this.countUp(el), { amount: 0.6 });
+    });
+
+    document.querySelectorAll('[data-anim="screen"] [data-anim-scanned]').forEach((block) => {
+      if (block.dataset.animWired) return;
+      block.dataset.animWired = "1";
+      const staggered = block.dataset.animStagger === "1";
+      const targets = staggered
+        ? Array.from(block.children).filter((k) => k.hasAttribute("data-reveal"))
+        : (block.hasAttribute("data-reveal") ? [block] : []);
+      if (!targets.length) return;
+      inView(block, () => {
+        animate(targets, { opacity: [0, 1], y: [24, 0] },
+          { duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: staggered ? stagger(0.06) : 0 }
+        ).finished.then(() => {
+          targets.forEach((t) => { t.dataset.animDone = "1"; t.removeAttribute("data-reveal"); });
+        });
+      }, { amount: 0.1 });
+    });
+  }
+
+  renderVals() {
+    const S = this.state;
+    const screen = this.currentScreen();
+    const go = (s, close) => () => {
+      this.setState({ screen: s, menuOpen: close ? false : S.menuOpen, sent: false, formError: false, downloaded: false });
+      window.scrollTo(0, 0);
+      try { history.replaceState(null, "", "#" + (this.staticMode ? "static/" : "") + s); } catch (e) {}
+    };
+    const at = (s) => screen === s;
+    const isMobile = S.width < 1200;
+    const pending = this.props.showVerificationFlags !== false;
+    const showCareers = this.props.showCareers === true;
+
+    const NAV = [
+      ["HOME", "home"], ["ABOUT", "about"], ["CAPABILITIES", "capabilities"],
+      ["INDUSTRIES", "industries"], ["PROJECTS", "projects"], ["FACILITY", "facility"],
+      ["QUALITY", "quality"], ["TECHNOLOGY", "technology"], ["CAREERS", "careers"], ["CONTACT", "contact"]
+    ].filter(([, id]) => id !== "careers" || showCareers);
+
+    const inputBase = "width:100%;padding:14px 16px;background:var(--bg2);border:2px solid rgba(var(--ink-rgb),0.24);color:var(--ink);font-size:15px;border-radius:0;outline:none";
+    const FIELDS = [
+      ["name", "NAME *", "text", "Full name", true],
+      ["company", "COMPANY *", "text", "Organisation", true],
+      ["designation", "DESIGNATION", "text", "e.g. Manager — Procurement", false],
+      ["email", "EMAIL *", "email", "name@company.com", true],
+      ["mobile", "MOBILE *", "tel", "+91", true],
+      ["location", "PROJECT LOCATION", "text", "City, State", false],
+      ["tonnage", "REQUIRED TONNAGE", "number", "e.g. 900", false],
+      ["grade", "MATERIAL GRADE", "text", "e.g. IS 2062 E250 BR", false],
+      ["delivery", "EXPECTED DELIVERY", "date", "", false],
+      ["inspection", "INSPECTION AGENCY", "text", "TPI agency, if any", false]
+    ];
+    const v = (k) => S.vals[k] || "";
+    const bad = (k, req) => {
+      if (!S.touched || !req) return false;
+      const val = v(k).trim();
+      if (!val) return true;
+      if (k === "email") return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+      if (k === "mobile") return val.replace(/\D/g, "").length < 10;
+      return false;
+    };
+    const set = (k) => (e) => this.setState({ vals: { ...S.vals, [k]: e.target.value } });
+    const errFor = (k) => k === "email" ? "Enter a valid email address."
+      : k === "mobile" ? "Enter a valid mobile number." : "This field is required.";
+
+    const fields = FIELDS.map(([id, label, type, placeholder, required]) => {
+      const invalid = bad(id, required);
+      return {
+        id: "rfq-" + id, label, type, placeholder, required,
+        value: v(id), onChange: set(id),
+        invalid: invalid ? "true" : "false", showError: invalid, error: errFor(id),
+        style: invalid ? inputBase + ";border-color:var(--acc)" : inputBase
+      };
+    });
+    const scopeBad = S.touched && !v("scope").trim();
+
+    const IMG = null;
+    const P = (k) => "./assets/stock/" + k + ".jpg";
+    const S_IND = ["D", "M", "G", "E", "L", "H", "A", "N", "C"].map(P);
+    const S_PRJ = ["A", "G", "L", "B", "E", "X"].map(P);
+    const S_STG = [["S", "P"], ["W", "Y", "AB", "R", "AC"], ["S", "T", "V"], ["B", "I", "D"], ["H", "G", "E"]];
+    const S_MCH = ["U", "N", "AA", "T", "Y", "W", "Z", "V", "J", "D", "F", "I"].map(P);
+    const ind = [
+      ["Power & Energy", "Structural and fabricated steel for thermal, renewable and balance-of-plant packages, produced to the tolerances and documentation regimes power EPCs require.", ""],
+      ["Steel & Metals", "Technological structures, conveyor galleries, junction houses and process buildings for integrated steel and metals plants.", ""],
+      ["Infrastructure", "Heavy fabricated assemblies for infrastructure programmes, from terminal structures to industrial sheds and support steel.", ""],
+      ["Cement", "Structural steel for cement plants — preheater towers, silo structures, chute and duct supports.", ""],
+      ["Industrial Manufacturing", "Fabrication for manufacturing plants: building frames, mezzanine floors, machine foundations and equipment supports.", ""],
+      ["Railways", "Fabricated components and structures for railway infrastructure, produced under the approval regime the sector requires.", ""],
+      ["EPC Projects", "Schedule-driven fabrication packages for EPC contractors, planned against the project's erection sequence rather than shop convenience.", ""],
+      ["Defence & Strategic", "Fabricated steel for strategic and defence infrastructure, with the documentation and confidentiality such work demands.", ""],
+      ["Heavy Engineering", "Complex built-up assemblies and equipment structures fabricated to customer drawings and inspection plans.", ""]
+    ].map(([name, long, img], k) => ({
+      num: String(k + 1).padStart(2, "0"), name, nameUpper: name.toUpperCase(), long, img: S_IND[k],
+      slot: "mo-ind-" + k, slotBig: "mo-indb-" + k
+    }));
+
+    const PSTAGES = ["Engineering", "Fabrication", "Inspection", "Dispatch", "Site"];
+    const projects = [
+      ["Thermal plant structural package", "Power & Energy", "Heavy structural fabrication", ""],
+      ["Pre-engineered warehouse, supply & erection", "Infrastructure", "Fabrication, supply & erection", ""],
+      ["Process plant technological structures", "Industrial Manufacturing", "Heavy fabrication & surface treatment", ""],
+      ["Conveyor gallery & junction house steel", "Steel & Metals", "Fabrication & painting", ""],
+      ["Industrial shed, primary & secondary steel", "EPC Projects", "Fabrication & supply", ""],
+      ["Equipment support structures", "Heavy Engineering", "Built-up assemblies to drawing", ""]
+    ].map(([title, industry, scope, img], k) => ({
+      num: String(k + 1).padStart(2, "0"), title, industry, scope, img: S_PRJ[k],
+      client: "To be confirmed", qty: "To be confirmed",
+      location: "To be confirmed", status: "To be confirmed",
+      slot: "mo-pj-" + k, slotBig: "mo-pjb-" + k,
+      stages: PSTAGES.map((name, j) => ({ name, img: P(S_STG[j][k % S_STG[j].length]), slot: "mo-pj" + k + "-s" + j }))
+    }));
+
+    const ticker = ["HEAVY STRUCTURAL STEEL", "CNC PROFILING", "SUBMERGED ARC WELDING", "NDT & INSPECTION",
+      "SHOT BLASTING", "SURFACE TREATMENT", "PRE-ENGINEERED BUILDINGS", "ERECTION AT SITE", "DIGITAL TRACEABILITY"];
+
+    return {
+      bgRef: this.bgRef, barRef: this.barRef, screenRef: this.screenRef,
+
+      nav: NAV.map(([label, id]) => ({
+        label, go: go(id), goClose: go(id, true),
+        active: screen === id, current: screen === id ? "page" : "false"
+      })),
+      isMobile, isDesktop: !isMobile,
+      monoLabel: S.mono ? "DARK" : "LIGHT",
+      monoPressed: S.mono ? "true" : "false",
+      toggleMono: () => {
+        const on = !S.mono;
+        this.setState({ mono: on });
+        this.applyMono(on);
+        try { localStorage.setItem("pepl-mono", on ? "1" : "0"); } catch (e) {}
+      },
+      menuOpen: S.menuOpen, videoOpen: S.videoOpen,
+      openMenu: () => this.setState({ menuOpen: true }),
+      closeMenu: () => this.setState({ menuOpen: false }),
+      openVideo: () => this.setState({ videoOpen: true }),
+      closeVideo: () => this.setState({ videoOpen: false }),
+      tickerTwice: ticker.concat(ticker),
+
+      atHome: at("home"), atAbout: at("about"), atCapabilities: at("capabilities"),
+      atIndustries: at("industries"), atProjects: at("projects"), atFacility: at("facility"),
+      atQuality: at("quality"), atTechnology: at("technology"), atCareers: showCareers && at("careers"), showCareers,
+      atContact: at("contact"),
+      goHome: go("home", true), goCapabilities: go("capabilities", true),
+      goIndustries: go("industries", true), goProjects: go("projects", true),
+      goCareers: go("careers", true), goContact: go("contact", true),
+      goContactClose: go("contact", true),
+
+      fields, onScope: (e) => this.setState({ vals: { ...S.vals, scope: e.target.value } }),
+      scopeError: scopeBad,
+      scopeStyle: (scopeBad ? inputBase + ";border-color:var(--acc)" : inputBase) + ";resize:vertical",
+      sent: S.sent, formError: S.formError, fileChosen: S.fileChosen,
+      chooseFiles: () => this.setState({ fileChosen: true }),
+      submit: () => {
+        const invalid = FIELDS.some(([id, , , , req]) => {
+          if (!req) return false;
+          const val = v(id).trim();
+          if (!val) return true;
+          if (id === "email") return !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(val);
+          if (id === "mobile") return val.replace(/\D/g, "").length < 10;
+          return false;
+        }) || !v("scope").trim();
+        this.setState({ touched: true, formError: invalid, sent: !invalid });
+      },
+      downloaded: S.downloaded,
+      download: () => { this.setState({ screen: "quality", downloaded: true, menuOpen: false }); window.scrollTo(0, 0); },
+
+      metrics: [
+        { value: "40,000", unit: "M²", label: "INDUSTRIAL LAND", pending },
+        { value: "6,000", unit: "M²", label: "COVERED AREA", pending },
+        { value: "30", unit: "MT", label: "CRANE CAPACITY", pending },
+        { value: "50 × 10", unit: "M", label: "TWIN-BEAM GANTRY", pending }
+      ],
+
+      capHeavy: ["Heavy Structural Steel", "Industrial Structures", "Complex Fabricated Assemblies",
+        "Columns & Beams", "Trusses", "Platforms", "Structural Components",
+        "Heavy Welded Structures", "Project-Specific Fabrication"],
+      capEng: ["Engineering", "Shop Drawings", "Fabrication Drawings", "CNC Data",
+        "Quantity Take-Off", "Production Planning", "Quality Documentation"],
+
+      process: [
+        { number: "01", name: "ENGINEERING", hold_point: "Drawing approval", document: "Approved engineering / shop drawing", signature: "Engineering sign-off" },
+        { number: "02", name: "MATERIAL PROCUREMENT", hold_point: "Material verification", document: "Material certificates", signature: "QC sign-off" },
+        { number: "03", name: "CNC CUTTING & DRILLING", hold_point: "Dimensional verification", document: "CNC program / inspection record", signature: "Production / QC sign-off" },
+        { number: "04", name: "FIT-UP", hold_point: "Fit-up inspection", document: "Fit-up inspection report", signature: "QC sign-off" },
+        { number: "05", name: "WELDING", hold_point: "Welding inspection", document: "WPS / PQR / welding record", signature: "Welding / QC sign-off" },
+        { number: "06", name: "INSPECTION & NDT", hold_point: "NDT acceptance", document: "NDT report", signature: "Inspection sign-off" },
+        { number: "07", name: "SHOT BLASTING / PAINTING", hold_point: "Surface / coating inspection", document: "Paint inspection report", signature: "QC sign-off" },
+        { number: "08", name: "FINAL INSPECTION", hold_point: "Final acceptance", document: "Final inspection dossier", signature: "Authorized sign-off" },
+        { number: "09", name: "DISPATCH", hold_point: "Dispatch clearance", document: "Dispatch documentation", signature: "Project sign-off" }
+      ],
+
+      industries: ind,
+      projects,
+      featured: projects.slice(0, 3),
+
+      machines: [
+        ["CNC Plasma Cutting", "Profile cutting from nested CNC data", ""],
+        ["CNC Drilling", "Beam-line drilling to model coordinates", ""],
+        ["Edge Milling", "Plate edge preparation for weld profiles", ""],
+        ["Band Saw", "Section cutting to length", ""],
+        ["I-Beam Fit-Up & Welding", "Built-up girder assembly", ""],
+        ["ESAB SAW Line", "Submerged arc welding", ""],
+        ["Beam Straightening", "Flange distortion correction", ""],
+        ["Shot Blasting", "Surface preparation to specified grade", ""],
+        ["Painting Bay", "Coating application and curing", ""],
+        ["Gantry Crane", "Twin-beam handling, 50 × 10 m", ""],
+        ["Drying Ovens", "Electrode and SAW flux consumable control", ""],
+        ["Weigh Bridge", "Dispatch weighing and record", ""]
+      ].map(([name, fn, img], k) => ({ name, fn, img: S_MCH[k], slot: "mo-m" + k })),
+
+      certs: [
+        { name: "ISO 9001", status: "Pending verification", evidence: "To be confirmed", download: "—" },
+        { name: "ISO 45001", status: "Pending verification", evidence: "To be confirmed", download: "—" },
+        { name: "BIS", status: "As applicable", evidence: "Per product standard", download: "—" },
+        { name: "RDSO", status: "As applicable", evidence: "Per railway scope", download: "—" },
+        { name: "BHEL approval / registration", status: "As applicable", evidence: "Per power-sector scope", download: "—" },
+        { name: "Welding qualifications", status: "Pending verification", evidence: "WPS / PQR register", download: "On request" },
+        { name: "NDT capabilities", status: "Pending verification", evidence: "In-house & agency", download: "On request" }
+      ],
+
+      downloads: [
+        { name: "Quality Certificates", meta: "PDF · pending" },
+        { name: "Quality Policy", meta: "PDF · 1 page" },
+        { name: "HSE Policy", meta: "PDF · 1 page" },
+        { name: "Inspection Procedures", meta: "PDF · pending" },
+        { name: "Company Profile", meta: "PDF · pending" }
+      ],
+
+      chain: ["Engineering Model", "Fabrication Drawing", "CNC Data", "Production", "Inspection", "Digital Record"]
+        .map((name, k) => ({ num: String(k + 1).padStart(2, "0"), name })),
+
+      tech: [
+        ["CNC Technology", "Plasma profiling and beam-line drilling driven directly by model output."],
+        ["3D Modelling", "Detailed models before steel is cut — clashes found on screen, not on site."],
+        ["CAD/CAM", "One data chain from detailing to machine, with no manual re-entry."],
+        ["Digital Production Planning", "Job-wise plans sequenced against the customer's erection programme."],
+        ["Production Monitoring", "Stage-wise progress captured against the plan and reported to the client."],
+        ["Quality Traceability", "Heat numbers, welders and inspection records tied to each mark number."],
+        ["Digital Documentation", "Dispatch document packs assembled and issued digitally."]
+      ].map(([name, body], k) => ({ num: String(k + 1).padStart(2, "0"), name, body })),
+
+      why: [
+        { title: "ENGINEERING CAPABILITY", description: "Engineering and detailing aligned with production requirements." },
+        { title: "MANUFACTURING CAPABILITY", description: "Integrated fabrication infrastructure for demanding projects." },
+        { title: "QUALITY COMMITMENT", description: "Controlled processes, inspection and documentation." },
+        { title: "PROJECT EXECUTION", description: "Planned execution from engineering through dispatch." },
+        { title: "SAFETY FIRST", description: "Safety integrated into operational processes." },
+        { title: "CUSTOMER FOCUS", description: "Clear communication and long-term project relationships." }
+      ],
+
+      values: [
+        { name: "INTEGRITY", meaning: "We communicate honestly, document accurately and deliver against commitments." },
+        { name: "OWNERSHIP", meaning: "We take responsibility from engineering through delivery." },
+        { name: "EXCELLENCE", meaning: "We continuously improve engineering, fabrication and quality standards." },
+        { name: "CARE", meaning: "We care about people, safety, quality, customers and long-term relationships." }
+      ],
+
+      leaders: [
+        { slot: "mo-ld-0", role: "CHAIRMAN / CMD", name: "Daxesh Soni" },
+        { slot: "mo-ld-1", role: "CEO", name: "To be confirmed" },
+        { slot: "mo-ld-2", role: "PLANT HEAD / CTO", name: "Sanjeev Roy" }
+      ],
+
+      clientSlots: Array.from({ length: 8 }, () => "LOGO — PERMISSION PENDING"),
+
+      roles: [
+        ["Structural Engineer", "Engineering"], ["Production Engineer", "Production"],
+        ["Welding Engineer", "Quality / Production"], ["QA/QC Engineer", "Quality"],
+        ["Planning Engineer", "Planning"], ["Project Manager", "Projects"],
+        ["Skilled Welder", "Production"], ["Fabricator", "Production"]
+      ].map(([role, department]) => ({
+        role, department, status: "To be confirmed",
+        mailto: "mailto:info@parasmaniengineering.com?subject=" + encodeURIComponent(role)
+      }))
+    };
+  }
+}
+</script>
+</body>
+</html>
