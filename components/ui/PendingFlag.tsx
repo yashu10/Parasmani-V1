@@ -6,7 +6,7 @@ export function PendingFlag({ children = "PENDING VERIFICATION", muted }: { chil
   return (
     <span
       className="pending-badge"
-      style={muted ? { borderColor: "rgb(var(--ink-rgb) / 0.3)", color: "var(--mute)" } : undefined}
+      style={muted ? { borderColor: "rgba(var(--ink-rgb), 0.3)", color: "var(--mute)" } : undefined}
     >
       {children}
     </span>
