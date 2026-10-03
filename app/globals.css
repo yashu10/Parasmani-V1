@@ -30,10 +30,10 @@
   --bg-rgb: 255, 255, 255;
   --bg3-rgb: 233, 238, 243;
   /* lighter dividers on white so the grid does not feel heavy */
-  --a-rule: 0.11;
-  --a-soft: 0.08;
-  --a-strong: 0.14;
-  --a-faint: 0.06;
+  --a-rule: 0.07;
+  --a-soft: 0.05;
+  --a-strong: 0.09;
+  --a-faint: 0.035;
 }
 
 @theme inline {
