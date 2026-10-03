@@ -34,7 +34,7 @@ export const metadata: Metadata = {
 export const viewport: Viewport = {
   width: "device-width",
   initialScale: 1,
-  themeColor: "#0A1622",
+  themeColor: "#FFFFFF",
 };
 
 // 1) mark JS as available (gates hidden-before-reveal styles)
@@ -53,7 +53,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <script dangerouslySetInnerHTML={{ __html: bootScript }} />
       </head>
       <body className="font-sans antialiased">
-        <ThemeProvider attribute="data-theme" defaultTheme="dark" enableSystem={false} storageKey="pepl-theme">
+        <ThemeProvider attribute="data-theme" defaultTheme="light" enableSystem={false} storageKey="pepl-theme">
           <a href="#main" className="sr-only-focusable z-[300] bg-brand px-4 py-2 text-white focus:fixed focus:left-2 focus:top-2">
             Skip to content
           </a>
