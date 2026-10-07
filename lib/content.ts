@@ -280,3 +280,12 @@ export const RDSO_DOCS = (
   status: status || (file ? "SUBMITTED" : "ON REQUEST"),
   tone: status ? "hl" : file ? "acc" : "mute",
 }));
+
+// Supplied by the CMD (Daxesh Soni), 26 Sep 2026.
+export const VMP = {
+  vision:
+    "We at Parasmani Engineering are becoming the world’s most admired, result-driven, referred, preferred and blessed Fabrication Engineering Organisation.",
+  mission: "We deliver safe, high-quality engineering solutions through excellence, innovation and teamwork.",
+  purpose:
+    "To build a better future through engineering excellence, creating value for our customers, empowering our people and contributing to society.",
+};

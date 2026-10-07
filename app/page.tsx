@@ -2,7 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { buildMetadata, orgAddressLd } from "@/lib/seo";
 import { SITE, flags } from "@/lib/site";
-import { CAP_ENG, CAP_HEAVY, INDUSTRIES, PROJECTS, TICKER, WHY, alt, img } from "@/lib/content";
+import { CAP_ENG, CAP_HEAVY, INDUSTRIES, PROJECTS, TICKER, VMP, WHY, alt, img } from "@/lib/content";
 import { Headline } from "@/components/ui/Headline";
 import { JsonLd } from "@/components/ui/JsonLd";
 import { Metrics } from "@/components/ui/Metrics";
@@ -125,6 +125,28 @@ export default function HomePage() {
           </div>
         </>
       )}
+
+      {/* Vision / Mission / Purpose */}
+      <section data-block="stagger" className="grid border-b-2 border-rule bg-bg" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))" }}>
+        <div className="px-gut min-w-0 border-r-2 border-rule py-[clamp(48px,7vw,100px)]">
+          <span className="eyebrow">WHO WE ARE</span>
+          <h2 className="mb-0 mt-5 text-[11px] font-semibold tracking-[0.14em] text-acc">VISION</h2>
+          <p className="mb-0 mt-4 max-w-[34ch] text-[clamp(20px,2.4vw,30px)] font-bold leading-[1.2] tracking-[-0.025em]">{VMP.vision}</p>
+          <Link href="/about" className="btn btn-outline mt-9 min-h-[52px] px-[22px] py-4 text-[11px]">
+            MORE ABOUT PEPL
+          </Link>
+        </div>
+        <div className="min-w-0">
+          <div className="px-gut border-b-2 border-rule py-[clamp(32px,4vw,56px)]">
+            <h2 className="m-0 text-[11px] font-semibold tracking-[0.14em] text-acc">MISSION</h2>
+            <p className="mb-0 mt-4 max-w-[46ch] text-[clamp(16px,1.5vw,19px)] font-medium leading-[1.45] text-soft">{VMP.mission}</p>
+          </div>
+          <div className="px-gut py-[clamp(32px,4vw,56px)]">
+            <h2 className="m-0 text-[11px] font-semibold tracking-[0.14em] text-acc">PURPOSE</h2>
+            <p className="mb-0 mt-4 max-w-[46ch] text-[clamp(16px,1.5vw,19px)] font-medium leading-[1.45] text-soft">{VMP.purpose}</p>
+          </div>
+        </div>
+      </section>
 
       {/* 01 Capability */}
       <section data-block="stagger" className="grid border-b-2 border-rule bg-bg" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(320px,1fr))" }}>

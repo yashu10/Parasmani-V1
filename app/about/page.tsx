@@ -1,5 +1,5 @@
 import { buildMetadata } from "@/lib/seo";
-import { LEADERS, VALUES, alt, img } from "@/lib/content";
+import { LEADERS, VALUES, VMP, alt, img } from "@/lib/content";
 import { flags } from "@/lib/site";
 import { PageHero } from "@/components/ui/PageHero";
 import { Headline } from "@/components/ui/Headline";
@@ -30,6 +30,9 @@ export default function AboutPage() {
         titleMargin="22px 0 0"
       />
 
+      <div data-block="one" className="px-gut border-b-2 border-rule bg-bg pb-5 pt-[clamp(28px,3.5vw,44px)]">
+        <span className="eyebrow">PEPL&apos;S 4 CORE VALUES · INTEGRITY • OWNERSHIP • EXCELLENCE • CARE</span>
+      </div>
       <section data-block="stagger" className="grid border-b-2 border-rule bg-bg" style={{ gridTemplateColumns: "repeat(auto-fit,minmax(240px,1fr))" }}>
         {VALUES.map((v) => (
           <div key={v.name} className="px-gut min-w-0 border-r-2 border-rule py-[clamp(32px,4vw,56px)]">
@@ -43,19 +46,19 @@ export default function AboutPage() {
         <div className="px-gut min-w-0 border-r-2 border-rule py-[clamp(40px,5vw,80px)]">
           <h2 className="m-0 text-[11px] font-semibold tracking-[0.14em] text-acc">VISION</h2>
           <p className="mb-0 mt-[22px] text-[clamp(18px,2vw,25px)] font-bold leading-[1.22] tracking-[-0.025em]">
-            To become the world&apos;s most admired, result-driven, referred and preferred fabrication engineering organisation.
+            {VMP.vision}
           </p>
         </div>
         <div className="px-gut min-w-0 border-r-2 border-rule py-[clamp(40px,5vw,80px)]">
           <h2 className="m-0 text-[11px] font-semibold tracking-[0.14em] text-acc">MISSION</h2>
           <p className="mb-0 mt-[22px] text-[16px] leading-[1.55] text-soft">
-            Deliver engineered steel solutions through disciplined processes, capable people, technology and uncompromising quality.
+            {VMP.mission}
           </p>
         </div>
         <div className="px-gut min-w-0 py-[clamp(40px,5vw,80px)]">
           <h2 className="m-0 text-[11px] font-semibold tracking-[0.14em] text-acc">PURPOSE</h2>
           <p className="mb-0 mt-[22px] text-[16px] leading-[1.55] text-soft">
-            To transform engineering requirements into reliable, manufacturable and deliverable steel solutions.
+            {VMP.purpose}
           </p>
         </div>
       </section>
